@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Ryota Ewamoto" />
+    <title>Ryota Ewamoto</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header>
+      <a class="name" href="#top">Ryota Ewamoto</a>
+      <nav aria-label="メインナビゲーション">
+        <a href="#profile">Profile</a>
+        <a href="#works">Works</a>
+        <a href="#pdf">PDF</a>
+        <a href="#notes">Notes</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="intro" id="profile">
+        <h1>Ryota Ewamoto</h1>
+        <p class="links">
+          <a href="https://github.com/Ryotaewamoto" rel="noreferrer">GitHub</a>
+        </p>
+      </section>
+
+      <section id="works">
+        <h2>Works</h2>
+        <div id="works-list" class="list"></div>
+      </section>
+
+      <section id="pdf">
+        <h2>PDF</h2>
+        <div id="pdf-list" class="list"></div>
+      </section>
+
+      <section id="notes">
+        <h2>Notes</h2>
+        <div id="notes-list" class="notes"></div>
+      </section>
+    </main>
+
+    <footer>© <span id="year"></span> Ryota Ewamoto</footer>
+    <script src="./data.js"></script>
+    <script>
+      const escapeHtml = (text) =>
+        String(text).replace(/[&<>"']/g, (char) => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#039;",
+        })[char]);
+
+      document.querySelector("#works-list").innerHTML = works.map((item) => `
+        <article>
+          <time>${escapeHtml(item.year)}</time>
+          <div>
+            <h3>${item.url ? `<a href="${escapeHtml(item.url)}">${escapeHtml(item.title)}</a>` : escapeHtml(item.title)}</h3>
+            <p>${escapeHtml(item.description)}</p>
+          </div>
+        </article>
+      `).join("") || "<p>準備中</p>";
+
+      document.querySelector("#pdf-list").innerHTML = pdfs.map((item) => `
+        <article>
+          <time>${escapeHtml(item.year)}</time>
+          <div>
+            <h3><a href="${escapeHtml(item.file)}">${escapeHtml(item.title)}</a></h3>
+            ${item.description ? `<p>${escapeHtml(item.description)}</p>` : ""}
+          </div>
+        </article>
+      `).join("") || "<p>準備中</p>";
+
+      document.querySelector("#notes-list").innerHTML = notes.map((item) => `
+        <article>
+          <time>${escapeHtml(item.date)}</time>
+          <h3>${escapeHtml(item.title)}</h3>
+          <p>${escapeHtml(item.body)}</p>
+        </article>
+      `).join("") || "<p>準備中</p>";
+
+      document.querySelector("#year").textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>
