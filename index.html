@@ -1,149 +1,35 @@
 <!doctype html>
 <html lang="ja">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Ryota Ewamoto" />
-    <title>Ryota Ewamoto</title>
-    <link rel="stylesheet" href="./style.css" />
-  </head>
-  <body>
-    <header>
-      <button class="name tab-button" data-tab="profile">Ryota Ewamoto</button>
-      <button class="menu-button" aria-expanded="false" aria-controls="tabs">Menu</button>
-      <nav id="tabs" aria-label="メインナビゲーション">
-        <button class="tab-button active" data-tab="profile">Profile</button>
-        <button class="tab-button" data-tab="cv">CV</button>
-        <button class="tab-button" data-tab="publications">Publications</button>
-        <button class="tab-button" data-tab="talks">Talks</button>
-        <button class="tab-button" data-tab="works">Works</button>
-        <button class="tab-button" data-tab="pdf">PDF</button>
-        <button class="tab-button" data-tab="notes">Notes</button>
-      </nav>
-    </header>
-
-    <main>
-      <section class="tab-panel active" id="profile">
-        <h1>Ryota Ewamoto</h1>
-        <dl class="profile-list">
-          <div><dt>Location</dt><dd>Japan</dd></div>
-        </dl>
-        <p class="links">
-          <a href="https://github.com/Ryotaewamoto" rel="noreferrer">GitHub</a>
-        </p>
-      </section>
-
-      <section class="tab-panel" id="cv">
-        <h2>CV</h2>
-        <div id="cv-list" class="list"></div>
-      </section>
-
-      <section class="tab-panel" id="publications">
-        <h2>Publications</h2>
-        <div id="publications-list" class="list"></div>
-      </section>
-
-      <section class="tab-panel" id="talks">
-        <h2>Talks</h2>
-        <div id="talks-list" class="list"></div>
-      </section>
-
-      <section class="tab-panel" id="works">
-        <h2>Works</h2>
-        <div id="works-list" class="list"></div>
-      </section>
-
-      <section class="tab-panel" id="pdf">
-        <h2>PDF</h2>
-        <div id="pdf-list" class="list"></div>
-      </section>
-
-      <section class="tab-panel" id="notes">
-        <h2>Notes</h2>
-        <div id="notes-list" class="notes"></div>
-      </section>
-    </main>
-
-    <footer>© <span id="year"></span> Ryota Ewamoto</footer>
-    <script src="./data.js"></script>
-    <script>
-      const escapeHtml = (text) =>
-        String(text).replace(/[&<>"']/g, (char) => ({
-          "&": "&amp;",
-          "<": "&lt;",
-          ">": "&gt;",
-          '"': "&quot;",
-          "'": "&#039;",
-        })[char]);
-
-      const linkedTitle = (item) =>
-        item.url
-          ? `<a href="${escapeHtml(item.url)}">${escapeHtml(item.title)}</a>`
-          : escapeHtml(item.title);
-
-      const renderList = (id, items) => {
-        document.querySelector(id).innerHTML = items.map((item) => `
-          <article>
-            <time>${escapeHtml(item.year)}</time>
-            <div>
-              <h3>${linkedTitle(item)}</h3>
-              ${item.description ? `<p>${escapeHtml(item.description)}</p>` : ""}
-            </div>
-          </article>
-        `).join("") || "<p class=\"empty\">準備中</p>";
-      };
-
-      renderList("#cv-list", cv);
-      renderList("#publications-list", publications);
-      renderList("#talks-list", talks);
-      renderList("#works-list", works);
-
-      document.querySelector("#pdf-list").innerHTML = pdfs.map((item) => `
-        <article>
-          <time>${escapeHtml(item.year)}</time>
-          <div>
-            <h3><a href="${escapeHtml(item.file)}">${escapeHtml(item.title)}</a></h3>
-            ${item.description ? `<p>${escapeHtml(item.description)}</p>` : ""}
-          </div>
-        </article>
-      `).join("") || "<p class=\"empty\">準備中</p>";
-
-      document.querySelector("#notes-list").innerHTML = notes.map((item) => `
-        <article>
-          <time>${escapeHtml(item.date)}</time>
-          <h3>${escapeHtml(item.title)}</h3>
-          <p>${escapeHtml(item.body)}</p>
-        </article>
-      `).join("") || "<p class=\"empty\">準備中</p>";
-
-      const menuButton = document.querySelector(".menu-button");
-      const nav = document.querySelector("nav");
-
-      const selectTab = (tab, updateHash = true) => {
-        const target = document.getElementById(tab) ? tab : "profile";
-        document.querySelectorAll(".tab-panel").forEach((panel) => {
-          panel.classList.toggle("active", panel.id === target);
-        });
-        document.querySelectorAll("nav .tab-button").forEach((button) => {
-          button.classList.toggle("active", button.dataset.tab === target);
-        });
-        nav.classList.remove("open");
-        menuButton.setAttribute("aria-expanded", "false");
-        if (updateHash) history.replaceState(null, "", `#${target}`);
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      };
-
-      document.querySelectorAll(".tab-button").forEach((button) => {
-        button.addEventListener("click", () => selectTab(button.dataset.tab));
-      });
-      menuButton.addEventListener("click", () => {
-        const open = nav.classList.toggle("open");
-        menuButton.setAttribute("aria-expanded", String(open));
-      });
-      window.addEventListener("hashchange", () => selectTab(location.hash.slice(1), false));
-
-      selectTab(location.hash.slice(1) || "profile", false);
-      document.querySelector("#year").textContent = new Date().getFullYear();
-    </script>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Ryota Ewamoto">
+  <title>Profile | Ryota Ewamoto</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header>
+    <a class="name" href="./">Ryota Ewamoto</a>
+    <button class="menu-button" aria-expanded="false" aria-controls="tabs">Menu</button>
+    <nav id="tabs" aria-label="メインナビゲーション">
+      <a class="active" href="./">Profile</a>
+      <a href="./cv.html">CV</a>
+      <a href="./publications.html">Publications</a>
+      <a href="./talks.html">Talks</a>
+      <a href="./works.html">Works</a>
+      <a href="./pdf.html">PDF</a>
+      <a href="./notes.html">Notes</a>
+    </nav>
+  </header>
+  <main>
+    <h1>Ryota Ewamoto</h1>
+    <dl class="profile-list">
+      <div><dt>Location</dt><dd>Japan</dd></div>
+    </dl>
+    <p class="links"><a href="https://github.com/Ryotaewamoto">GitHub</a></p>
+  </main>
+  <footer>© <span class="year"></span> Ryota Ewamoto</footer>
+  <script src="./data.js"></script>
+  <script src="./page.js"></script>
+</body>
 </html>
