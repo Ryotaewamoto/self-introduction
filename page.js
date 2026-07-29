@@ -7,6 +7,26 @@ const escapeHtml = (text) =>
     "'": "&#039;",
   })[char]);
 
+const formatSingleDate = (value) => {
+  const text = String(value).trim();
+  const match = text.match(/^(\d{4})(?:[./-](\d{1,2}))?(?:[./-](\d{1,2}))?$/);
+
+  if (!match) return text;
+
+  const [, year, month, day] = match;
+  return [
+    year,
+    month?.padStart(2, "0"),
+    day?.padStart(2, "0"),
+  ].filter(Boolean).join("/");
+};
+
+const formatDate = (value) =>
+  String(value)
+    .split(/(–|〜|~)/)
+    .map((part) => ["–", "〜", "~"].includes(part) ? part : formatSingleDate(part))
+    .join("");
+
 const type = document.body.dataset.list;
 const content = document.querySelector("#content");
 const items = window.pageItems || [];
@@ -18,7 +38,7 @@ if (type === "profile") {
       <div><dt>Name</dt><dd>${escapeHtml(profile.name)}（${escapeHtml(profile.nameJa)}）</dd></div>
       <div><dt>Affiliation</dt><dd>${escapeHtml(profile.affiliation)}</dd></div>
       <div><dt>Degrees</dt><dd>${profile.degrees.map(escapeHtml).join("<br>")}</dd></div>
-      <div><dt>Education</dt><dd>${profile.education.map((item) => `${escapeHtml(item.period)}　${escapeHtml(item.school)}`).join("<br>")}</dd></div>
+      <div><dt>Education</dt><dd>${profile.education.map((item) => `${escapeHtml(formatDate(item.period))}　${escapeHtml(item.school)}`).join("<br>")}</dd></div>
     </dl>
     <p class="links">
       <a href="https://github.com/Ryotaewamoto">GitHub</a>
@@ -29,7 +49,7 @@ if (type === "profile") {
   if (type === "notes") {
     content.innerHTML = items.map((item) => `
       <article>
-        <time>${escapeHtml(item.date)}</time>
+        <time>${escapeHtml(formatDate(item.date))}</time>
         <h2>${escapeHtml(item.title)}</h2>
         <p>${escapeHtml(item.body)}</p>
       </article>
@@ -42,7 +62,7 @@ if (type === "profile") {
         : escapeHtml(item.title);
       return `
         <article>
-          <time>${escapeHtml(item.year)}</time>
+          <time>${escapeHtml(formatDate(item.date ?? item.year))}</time>
           <div>
             <h2>${title}</h2>
             ${item.description ? `<p>${escapeHtml(item.description)}</p>` : ""}
