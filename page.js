@@ -50,7 +50,6 @@ if (type === "profile") {
     content.innerHTML = items.map((item) => `
       <article>
         <time>${escapeHtml(formatDate(item.date))}</time>
-        <h2>${escapeHtml(item.title)}</h2>
         <p>${escapeHtml(item.body)}</p>
       </article>
     `).join("") || '<p class="empty">準備中</p>';
